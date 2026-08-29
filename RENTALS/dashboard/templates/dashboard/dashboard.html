@@ -1,0 +1,325 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+
+{% block title %}Tenant List{% endblock %}
+
+{% block content %}
+    <div class="app-container">
+        <div class="header">
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search properties, tenants, leases...">
+            </div>
+            <div class="header-actions">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-profile">
+                    <div class="avatar">{{ user_initial }}</div>
+                    <div class="user-name">{{ user_name }}</div>
+                </div>
+            </div>
+        </div>
+
+            <div class="dashboard">
+                <h1 class="page-title"><i class="fas fa-home"></i> Dashboard</h1>
+                
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <a href="{% url 'properties:properties_home' %}" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">{{ total_properties }}</div>
+                                <div class="stat-label">Properties</div>
+                            </div>
+                            <div class="stat-icon properties">
+                                <i class="fas fa-building"></i>
+                            </div>
+                        </div>
+                        <div class="tenant-breakdown">
+                            {% for prop in property_breakdown %}
+                            <div class="tenant-property-row">
+                                <span class="tenant-property-name">{{ prop.name|truncatechars:20 }}</span>
+                                <span class="tenant-property-counts">{{ prop.occupied_units_count }}/{{ prop.total_units }} units</span>
+                            </div>
+                            {% empty %}
+                            <span class="tenant-empty">No properties</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </a>
+                    
+                    <a href="{% url 'tenants:tenant_list' %}" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">{{ total_tenants }}</div>
+                                <div class="stat-label">Tenants</div>
+                            </div>
+                            <div class="stat-icon tenants">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="tenant-breakdown">
+                            <div class="tenant-total-summary">
+                                <span class="tenant-count-value">{{ active_tenants }}</span>
+                                <span class="tenant-count-label">Active</span>
+                                <span class="tenant-count-divider"></span>
+                                <span class="tenant-count-value">{{ inactive_tenants }}</span>
+                                <span class="tenant-count-label">Inactive</span>
+                            </div>
+                            {% for stat in tenant_stats %}
+                            <div class="tenant-property-row">
+                                <span class="tenant-property-name">{{ stat.name|truncatechars:20 }}</span>
+                                <span class="tenant-property-counts">{{ stat.active }}/{{ stat.inactive }}</span>
+                            </div>
+                            {% empty %}
+                            <span class="tenant-empty">No property data</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </a>
+                    
+                    <a href="{% url 'payments:payment_list' %}" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">{{ total_revenue|floatformat:2 }}</div>
+                                <div class="stat-label">Monthly Revenue</div>
+                            </div>
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="tenant-breakdown">
+                            {% for item in revenue_breakdown %}
+                            <div class="tenant-property-row">
+                                <span class="tenant-property-name">{{ item.name|truncatechars:20 }}</span>
+                                <span class="tenant-property-counts">
+                                    KES {{ item.amount|floatformat:2 }}
+                                    {% if item.percentage is not None %}
+                                        <span class="{% if item.percentage >= 0 %}trend-up{% else %}trend-down{% endif %}">
+                                            {% if item.percentage >= 0 %}<i class="fas fa-arrow-up"></i>{% else %}<i class="fas fa-arrow-down"></i>{% endif %}
+                                            {{ item.abs_percentage }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% empty %}
+                            <span class="tenant-empty">No revenue this month</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </a>
+                    
+                    <a href="{% url 'maintenance:maintenance_home' %}" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">{{ total_maintenance|floatformat:2 }}</div>
+                                <div class="stat-label">Maintenance Requests</div>
+                            </div>
+                            <div class="stat-icon maintenance">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                        </div>
+                        <div class="tenant-breakdown">
+                            {% for item in maintenance_breakdown %}
+                            <div class="tenant-property-row">
+                                <span class="tenant-property-name">{{ item.name|truncatechars:20 }}</span>
+                                <span class="tenant-property-counts">
+                                    KES {{ item.amount|floatformat:2 }}
+                                    {% if item.percentage is not None %}
+                                        <span class="{% if item.percentage >= 0 %}trend-up{% else %}trend-down{% endif %}">
+                                            {% if item.percentage >= 0 %}<i class="fas fa-arrow-up"></i>{% else %}<i class="fas fa-arrow-down"></i>{% endif %}
+                                            {{ item.abs_percentage }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% empty %}
+                            <span class="tenant-empty">No requests this month</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </a>
+                    
+                    <a href="{% url 'arrears:arrears_report' %}" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">{{ total_arrears|floatformat:2 }}</div>
+                                <div class="stat-label">Arrears</div>
+                            </div>
+                            <div class="stat-icon arrears">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="tenant-breakdown">
+                            {% for item in arrears_breakdown %}
+                            <div class="tenant-property-row">
+                                <span class="tenant-property-name">{{ item.name|truncatechars:20 }}</span>
+                                <span class="tenant-property-counts">
+                                    KES {{ item.amount|floatformat:2 }}
+                                </span>
+                            </div>
+                            {% empty %}
+                            <span class="tenant-empty">No pending arrears</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </a>
+                    
+                    <a href="{% url 'water_bills:water_bills_home' %}" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">{{ total_water_bills|floatformat:2 }}</div>
+                                <div class="stat-label">Water Bills</div>
+                            </div>
+                            <div class="stat-icon water">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                        </div>
+                        <div class="tenant-breakdown">
+                            {% for item in water_bills_breakdown %}
+                            <div class="tenant-property-row">
+                                <span class="tenant-property-name">{{ item.name|truncatechars:20 }}</span>
+                                <span class="tenant-property-counts">
+                                    KES {{ item.amount|floatformat:2 }}
+                                </span>
+                            </div>
+                            {% empty %}
+                            <span class="tenant-empty">No water bills this month</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                
+                {% comment %} <!-- Main Content Grid -->
+                <div class="content-grid">
+                    <div>
+                        <!-- Properties Section -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-building"></i> Recent Properties</h2>
+                                <a href="{% url 'properties:properties_home' %}" class="action-btn outline">
+                                    <i class="fas fa-plus"></i> Add Property
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="property-grid">
+                                    {% for property in recent_properties %}
+                                    <div class="property-card">
+                                        <div class="property-img">
+                                            <i class="fas fa-building"></i>
+                                        </div>
+                                        <div class="property-details">
+                                            <h3 class="property-title">{{ property.name }}</h3>
+                                            <p class="property-address">
+                                                <i class="fas fa-map-marker-alt"></i> {{ property.location }}, {{ property.county }}
+                                            </p>
+                                            <div class="property-meta">
+                                                <div class="property-meta-occupancy">
+                                                    <span class="property-name">{{ property.name }}</span>
+                                                    <span class="property-occupancy">{{ property.occupied_units|default:"0" }}/{{ property.total_units|default:"0" }} units occupied</span>
+                                                </div>
+                                                <div class="property-status status-available">Active</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <div class="property-card">
+                                        <p style="text-align: center; padding: 20px; color: #999;">No properties available</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     {% endcomment %}
+                    <div>
+                        <!-- Quick Actions -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="quick-actions">
+                                    <a href="{% url 'properties:properties_home' %}" class="quick-action add-property">
+                                        <i class="fas fa-home"></i>
+                                        <span>Add Property</span>
+                                    </a>
+                                    <a href="{% url 'tenants:tenant_list' %}" class="quick-action add-tenant">
+                                        <i class="fas fa-user-plus"></i>
+                                        <span>Add Tenant</span>
+                                    </a>
+                                    <a href="{% url 'invoices:invoice_list' %}" class="quick-action generate-invoice">
+                                        <i class="fas fa-file-invoice"></i>
+                                        <span>Generate Invoice</span>
+                                    </a>
+                                    <a href="{% url 'payments:payment_list' %}" class="quick-action add-payment">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Add Payments</span>
+                                    </a>
+                                    <a href="{% url 'arrears:arrears_report' %}" class="quick-action check-arrears">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Check Arrears</span>
+                                    </a>
+                                    <a href="{% url 'maintenance:maintenance_home' %}" class="quick-action maintenance">
+                                        <i class="fas fa-tools"></i>
+                                        <span>New Maintenance Request</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Tenants -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-users"></i> Recent Tenants</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="tenant-list">
+                                    {% for tenant in recent_tenants %}
+                                    <div class="tenant-item">
+                                        <div class="tenant-avatar">{{ tenant.first_name|first }}{{ tenant.last_name|first }}</div>
+                                        <div class="tenant-info">
+                                            <h4>{{ tenant.first_name }} {{ tenant.last_name }}</h4>
+                                            <p>{{ tenant.id_number|default:"Tenant" }}</p>
+                                        </div>
+                                        <a href="{% url 'tenants:tenant_list' %}" class="action-btn outline">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                    {% empty %}
+                                    <p style="text-align: center; padding: 20px; color: #999;">No tenants available</p>
+                                    {% endfor %}
+                                </div>
+                                <a href="{% url 'tenants:tenant_list' %}" class="action-btn" style="width: 100%; margin-top: 15px; display: block; text-align: center;">
+                                    <i class="fas fa-users"></i> View All Tenants
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+{% endblock %}

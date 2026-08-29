@@ -1,0 +1,187 @@
+/* accounts.css - Minimalist Professional Theme */
+
+:root {
+    --bg-color: #fcfcfc;
+    --card-bg: #ffffff;
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    --border-color: #eee;
+    --primary-color: #3f37c9; /* Your main color */
+    --primary-hover: #3730b8;
+    --danger: #d63031;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Full viewport flex centering for auth pages */
+.auth-center {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+}
+
+/* Vertical & Horizontal Centering for Auth Pages */
+.container.py-5 {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Minimalist Card */
+.card.shadow-sm {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.02) !important;
+    padding: 1rem;
+}
+
+/* Form Styling */
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger) !important;
+    background-color: #fffafa;
+}
+
+.text-danger {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #d63031 !important;
+    text-shadow: 0 2px 4px rgba(214, 48, 49, 0.3);
+    display: inline-block;
+    margin-top: 0.25rem;
+}
+
+/* Alert Styling for Form Errors */
+.alert-danger {
+    color: #d63031 !important;
+    background-color: #ffe0e0 !important;
+    border: 1px solid #ffb3b3 !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(214, 48, 49, 0.25);
+}
+
+.alert-danger .alert-heading {
+    color: #d63031 !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(214, 48, 49, 0.2);
+}
+
+.alert-danger ul li {
+    color: #d63031 !important;
+}
+
+/* Target all inputs, textareas, and selects */
+.form-control, 
+input[type="text"], 
+input[type="password"], 
+input[type="email"], 
+input[type="tel"], 
+input[type="file"],
+select, 
+textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+/* Hover & Focus Effects for Inputs */
+.form-control:hover, 
+input:hover {
+    border-color: #d1d1d1;
+}
+
+.form-control:focus, 
+input:focus {
+    background-color: #fff;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(63, 55, 201, 0.1);
+    outline: none;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(63, 55, 201, 0.3);
+}
+
+.btn-success {
+    background-color: #4cc9f0 !important;
+    border: none !important;
+}
+
+.btn-outline-secondary {
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: var(--text-muted);
+    color: #000;
+}
+
+/* Profile Image Hover */
+.rounded-circle {
+    transition: transform 0.3s ease;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.rounded-circle:hover {
+    transform: scale(1.05);
+}
+
+/* Fix for flatpickr disappearing in card with border-0 and p-4 */
+.flatpickr-calendar {
+    z-index: 9999 !important;
+    box-shadow: 0 8px 32px rgba(60,60,100,0.18), 0 1.5px 4px rgba(60,60,100,0.10);
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+.flatpickr-calendar.open {
+    display: block !important;
+}
+
+input.datepicker[readonly] {
+    background-color: #fff !important;
+    cursor: pointer;
+}

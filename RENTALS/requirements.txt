@@ -1,0 +1,8 @@
+asgiref==3.11.1
+Django==6.0.2
+django-filter==25.2
+openpyxl==3.1.5
+pillow==12.1.1
+psycopg[binary]==3.2.13
+reportlab==4.2.5
+sqlparse==0.5.5

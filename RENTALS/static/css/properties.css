@@ -1,0 +1,256 @@
+/* properties.css - Synced with Accounts Style */
+
+:root {
+    --bg-color: #fcfcfc;
+    --card-bg: #ffffff;
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    --border-color: #eee;
+    --primary-color: #3f37c9; /* Your main color */
+    --primary-hover: #3730b8;
+    --danger: #d63031;
+    --bg-light: #fafafa;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Header Styling */
+h2 { 
+    font-weight: 800; 
+    color: var(--text-main); 
+    letter-spacing: -0.5px; 
+}
+
+h3, h4, h5 { 
+    color: var(--text-main); 
+    font-weight: 700;
+}
+
+/* Form Label Styling */
+.form-label, 
+.modal-body label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Form Controls - All Input Types */
+.form-control,
+.modal-body input, 
+.modal-body select, 
+.modal-body textarea,
+input[type="text"], 
+input[type="password"], 
+input[type="email"], 
+input[type="tel"], 
+input[type="file"],
+input[type="number"],
+input[type="date"],
+select, 
+textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+    background-color: var(--bg-light);
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+/* Form Control Invalid State */
+.form-control.is-invalid,
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+    border-color: var(--danger) !important;
+    background-color: #fffafa;
+}
+
+/* Input Hover & Focus States */
+.form-control:hover, 
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #d1d1d1;
+}
+
+.form-control:focus, 
+input:focus,
+select:focus,
+textarea:focus,
+.modal-body input:focus, 
+.modal-body textarea:focus {
+    background-color: #fff;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(63, 55, 201, 0.1);
+    outline: none;
+}
+
+/* Error Messages */
+.text-danger,
+.invalid-feedback {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #d63031 !important;
+    text-shadow: 0 2px 4px rgba(214, 48, 49, 0.3);
+    display: inline-block;
+    margin-top: 0.25rem;
+}
+
+/* Alert Styling for Form Errors */
+.alert-danger {
+    color: #d63031 !important;
+    background-color: #ffe0e0 !important;
+    border: 1px solid #ffb3b3 !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(214, 48, 49, 0.25);
+}
+
+.alert-danger .alert-heading {
+    color: #d63031 !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(214, 48, 49, 0.2);
+}
+
+.alert-danger ul li {
+    color: #d63031 !important;
+}
+
+/* Card Styling */
+.card,
+.card.shadow-sm {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.02) !important;
+}
+
+.card.shadow-sm {
+    padding: 1rem;
+}
+
+/* Button Styling */
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(63, 55, 201, 0.3);
+}
+
+.btn-success {
+    background-color: #4cc9f0 !important;
+    border: none !important;
+}
+
+.btn-outline-secondary {
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: var(--text-muted);
+    color: #000;
+}
+
+/* Modal Buttons - Matched to Accounts Actions */
+.btn-save-property {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-save-property:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(63, 55, 201, 0.3);
+}
+
+.btn-cancel-property {
+    background-color: #fff;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-cancel-property:hover {
+    background-color: #f8f9fa;
+    color: var(--text-main);
+}
+
+/* Modal Styling */
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-body {
+    padding: 2rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Table Styling */
+table {
+    color: var(--text-main);
+}
+
+table thead {
+    background-color: var(--bg-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}

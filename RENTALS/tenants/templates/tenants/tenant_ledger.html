@@ -1,0 +1,169 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tenant_ledger.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="back-button">
+    <a href="{% url 'tenants:tenant_list' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Tenants
+    </a>
+</div>
+
+<div class="tenant-header">
+    <div class="tenant-info">
+        <h2><i class="fas fa-user"></i> {{ tenant.first_name }} {{ tenant.last_name }}</h2>
+        {% if tenant.get_display_property %}
+            <p><strong>Property:</strong> {{ tenant.get_display_property.name }}</p>
+        {% endif %}
+        {% if tenant.unit %}
+            <p><strong>Unit:</strong> {{ tenant.unit.name }}</p>
+        {% endif %}
+        <p><strong>Phone:</strong> {{ tenant.phone_number }}</p>
+        <p><strong>Status:</strong> 
+            {% if tenant.status == 'active' %}
+                <span class="badge bg-success">Active</span>
+            {% else %}
+                <span class="badge bg-secondary">Inactive</span>
+            {% endif %}
+        </p>
+        <p><strong>Deposit Paid:</strong> KES {{ tenant.deposit_amount|default:0|floatformat:2 }}</p>
+    </div>
+    <div class="tenant-switcher">
+        <label for="tenantLedgerTenantSelect" class="form-label">Change Tenant</label>
+        <select id="tenantLedgerTenantSelect" class="form-select">
+            {% for property_tenant in property_tenants %}
+                <option value="{% url 'tenants:tenant_ledger' property_tenant.id %}" {% if property_tenant.id == tenant.id %}selected{% endif %}>
+                    {{ property_tenant.first_name }} {{ property_tenant.last_name }}{% if property_tenant.unit %} - {{ property_tenant.unit.name }}{% endif %}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<!-- Summary Statistics -->
+<div class="summary-stats">
+    <div class="stat-box">
+        <h3>Total Invoiced</h3>
+        <div class="value">KES {{ total_invoiced|floatformat:2 }}</div>
+    </div>
+    <div class="stat-box">
+        <h3>Total Paid</h3>
+        <div class="value">KES {{ total_paid|floatformat:2 }}</div>
+    </div>
+    <div class="stat-box {% if current_balance > 0 %}positive{% endif %}">
+        <h3>Current Balance</h3>
+        <div class="value">KES {{ current_balance|floatformat:2 }}</div>
+        {% if current_balance > 0 %}
+            <small>(Due)</small>
+        {% else %}
+            <small>(Paid)</small>
+        {% endif %}
+    </div>
+    {% if overdue_count > 0 %}
+        <div class="stat-box positive">
+            <h3>Overdue Invoices</h3>
+            <div class="value">{{ overdue_count }}</div>
+            <span class="badge-overdue">Requires Attention</span>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Ledger Table -->
+<div class="card ledger-card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-book"></i> Tenant Ledger
+        </h5>
+    </div>
+    <div class="card-body">
+        {% if ledger_entries %}
+            <div class="table-responsive">
+                <table class="table table-hover ledger-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th class="text-end">Debit (Invoice)</th>
+                            <th class="text-end">Credit (Payment)</th>
+                            <th class="text-end">Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in ledger_entries %}
+                            <tr>
+                                <td>{{ entry.date|date:"M d, Y" }}</td>
+                                <td class="fw-semibold">{{ entry.code|default:"-" }}</td>
+                                <td>
+                                    {{ entry.description }}
+                                    {% if entry.is_overdue %}
+                                        <span class="badge-overdue">OVERDUE</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if entry.debit %}
+                                        <span class="amount-debit">KES {{ entry.debit|floatformat:2 }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if entry.credit %}
+                                        <span class="amount-credit">KES {{ entry.credit|floatformat:2 }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if entry.balance > 0 %}
+                                        <span class="balance-positive">KES {{ entry.balance|floatformat:2 }}</span>
+                                    {% elif entry.balance == 0 %}
+                                        <span class="balance-zero">KES 0.00</span>
+                                    {% else %}
+                                        <span class="balance-zero">KES {{ entry.balance|floatformat:2 }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if entry.status == 'Paid' %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% elif entry.status == 'Partially Paid' %}
+                                        <span class="badge bg-warning">Partially Paid</span>
+                                    {% elif entry.status == 'Unpaid' %}
+                                        <span class="badge bg-danger">Unpaid</span>
+                                    {% elif entry.status == 'claimed' %}
+                                        <span class="badge bg-info">Claimed</span>
+                                    {% elif entry.status == 'unclaimed' %}
+                                        <span class="badge bg-secondary">Unclaimed</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ entry.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No ledger entries found for this tenant.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Download/Export Button -->
+<div class="mt-4">
+    <button id="printLedgerButton" class="btn btn-primary" type="button">
+        <i class="fas fa-print"></i> Print Ledger
+    </button>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/tenant_ledger.js' %}" defer></script>
+{% endblock %}

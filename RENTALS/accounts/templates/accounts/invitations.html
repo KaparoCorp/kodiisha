@@ -1,0 +1,194 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    .ts-control {
+        min-height: 42px;
+    }
+    .ts-wrapper.multi .ts-control > div {
+        border-radius: 4px;
+    }
+    /* Hide native select immediately to prevent blink before TomSelect loads */
+    select.tom-select-multi {
+        display: none;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Invitations</h2>
+            <p class="text-muted mb-0">Invite users, assign their role, and grant property access.</p>
+        </div>
+    </div>
+
+    {% if created_invite_url %}
+        <div class="alert alert-success">
+            <strong>Invite link:</strong>
+            <input class="form-control mt-2" value="{{ created_invite_url }}" readonly>
+            <small class="text-muted mt-1 d-block">Share this link with the invited person.</small>
+        </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Create Invitation</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% for error in form.email.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {% for error in form.first_name.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            {% for error in form.last_name.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.role.label }}</label>
+                            {{ form.role }}
+                            {% for error in form.role.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.properties.label }}</label>
+                            <small class="text-muted d-block mb-1">{{ form.properties.help_text }}</small>
+                            {{ form.properties }}
+                            {% for error in form.properties.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create Invitation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Recent Invitations</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Properties</th>
+                                    <th>Expires</th>
+                                    <th>Invited By</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for invitation in invitations %}
+                                    <tr id="invitation-row-{{ invitation.id }}">
+                                        <td>{{ invitation.email }}</td>
+                                        <td>{{ invitation.get_role_display }}</td>
+                                        <td><span class="badge bg-light text-dark border">{{ invitation.get_status_display }}</span></td>
+                                        <td>
+                                            {% for prop in invitation.properties.all %}
+                                                <span class="badge bg-info text-dark me-1">{{ prop.name }}</span>
+                                            {% empty %}
+                                                <span class="text-muted">—</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{ invitation.expires_at|date:"M j, Y H:i" }}</td>
+                                        <td>{{ invitation.invited_by.username }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger delete-invitation-btn"
+                                                    data-invitation-id="{{ invitation.id }}"
+                                                    data-invitation-email="{{ invitation.email }}"
+                                                    data-delete-url="{% url 'accounts:delete_invitation' invitation.id %}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-muted text-center py-4">No invitations yet.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new TomSelect('select.tom-select-multi', {
+            plugins: ['remove_button'],
+            maxItems: null,
+        });
+
+        // Delete invitation via AJAX
+        document.querySelectorAll('.delete-invitation-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const invitationId = this.dataset.invitationId;
+                const invitationEmail = this.dataset.invitationEmail;
+                const row = document.getElementById('invitation-row-' + invitationId);
+
+                if (!confirm('Delete invitation for ' + invitationEmail + '?')) {
+                    return;
+                }
+
+                const deleteUrl = this.dataset.deleteUrl;
+                if (!deleteUrl) {
+                    alert('Delete URL not found. Please refresh the page.');
+                    return;
+                }
+
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (!csrfToken) {
+                    alert('CSRF token not found. Please refresh the page.');
+                    return;
+                }
+
+                fetch(deleteUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken.value,
+                    },
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        row.remove();
+                        // Check if table is now empty
+                        const tbody = document.querySelector('table tbody');
+                        if (tbody && tbody.querySelectorAll('tr').length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="7" class="text-muted text-center py-4">No invitations yet.</td></tr>';
+                        }
+                    } else {
+                        alert(data.message || 'Failed to delete invitation.');
+                    }
+                })
+                .catch(function() {
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        });
+    });
+</script>
+{% endblock extra_js %}

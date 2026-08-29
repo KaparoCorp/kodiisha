@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>You're invited to PROPATIA</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <h2 style="color: #2c3e50;">You're invited to {{ site_name }}</h2>
+    <p>Hello,</p>
+    <p>You have been invited to join <strong>{{ site_name }}</strong> on PROPATIA. Click the button below to accept your invitation and set up your account.</p>
+
+    <table style="margin: 30px 0;">
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Role</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">{{ invitation.get_role_display }}</td>
+        </tr>
+        <tr style="background: #f4f4f4;">
+            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Invited By</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">{{ invitation.invited_by.get_full_name|default:invitation.invited_by.username }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Expires</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">{{ invitation.expires_at|date:"M d, Y" }}</td>
+        </tr>
+    </table>
+
+    <p style="text-align: center;">
+        <a href="{{ accept_url }}" style="background: #27ae60; color: white; padding: 14px 28px; text-decoration: none; border-radius: 4px; font-size: 16px;">Accept Invitation</a>
+    </p>
+
+    <p style="color: #777; font-size: 14px;">If the button above doesn't work, copy and paste this link into your browser:</p>
+    <p style="word-break: break-all; color: #2980b9;">{{ accept_url }}</p>
+
+    <p style="color: #777; font-size: 12px; margin-top: 40px;">This invitation will expire on {{ invitation.expires_at|date:"M d, Y" }}. If you did not expect this invitation, you can safely ignore this email.</p>
+</body>
+</html>

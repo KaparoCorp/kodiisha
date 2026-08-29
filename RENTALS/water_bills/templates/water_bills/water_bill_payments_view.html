@@ -1,0 +1,136 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block extra_js %}
+<script src="{% static 'js/water_bills.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Water Bill Payments</h2>
+        {% if can_delete_water_bill_payments %}
+        <div class="d-flex gap-2">
+            <button type="button" id="deleteSelectedWaterBillPaymentsBtn" class="btn btn-danger shadow-sm" style="display: none;">
+                <i class="bi bi-trash me-1"></i> DELETE SELECTED
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Filters</h5>
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-1">Property</label>
+                    <select name="property" class="form-select">
+                        <option value="">All Properties</option>
+                        {% for p in properties %}
+                        <option value="{{ p.id }}" {% if selected_property|stringformat:"s" == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-1">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="" {% if not selected_status %}selected{% endif %}>All Status</option>
+                        <option value="claimed" {% if selected_status == "claimed" %}selected{% endif %}>Claimed</option>
+                        <option value="unclaimed" {% if selected_status == "unclaimed" %}selected{% endif %}>Unclaimed</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Date Range</label>
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <input type="text" name="start_date" class="form-control datepicker" value="{{ selected_start_date }}" placeholder="Start Date" aria-label="Start Date">
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" name="end_date" class="form-control datepicker" value="{{ selected_end_date }}" placeholder="End Date" aria-label="End Date">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">FILTER</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Water Bill Payment List</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        {% if can_delete_water_bill_payments %}
+                        <th class="ps-4">
+                            <input type="checkbox" id="selectAllWaterBillPayments" class="form-check-input">
+                        </th>
+                        {% endif %}
+                        <th {% if not can_delete_water_bill_payments %}class="ps-4"{% endif %}>Date</th>
+                        <th>Property</th>
+                        <th>House/Unit</th>
+                        <th>Tenant</th>
+                        <th>Code</th>
+                        <th>Amount</th>
+                        <th>Allocated</th>
+                        <th>Credit</th>
+                        <th>Covers</th>
+                        <th>Details</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        {% if can_delete_water_bill_payments %}
+                        <td class="ps-4">
+                            <input type="checkbox" class="form-check-input water-bill-payment-checkbox" value="{{ payment.id }}">
+                        </td>
+                        {% endif %}
+                        <td {% if not can_delete_water_bill_payments %}class="ps-4"{% endif %}>{{ payment.date|date:"d/m/Y" }}</td>
+                        <td>{{ payment.property.name }}</td>
+                        <td>{% if payment.unit %}{{ payment.unit.name }}{% else %}<span class="text-muted">-</span>{% endif %}</td>
+                        <td>{{ payment.tenant.first_name }} {{ payment.tenant.last_name }}</td>
+                        <td class="fw-semibold">{{ payment.code|default:"-" }}</td>
+                        <td class="fw-bold">KES {{ payment.amount }}</td>
+                        <td>KES {{ payment.allocated_amount|floatformat:2 }}</td>
+                        <td>
+                            {% if payment.remaining_credit > 0 %}
+                                <span class="badge bg-info-subtle text-info rounded-pill px-3">KES {{ payment.remaining_credit|floatformat:2 }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="small">
+                            {% if payment.allocation_summary %}
+                                {{ payment.allocation_summary }}
+                                {% if payment.allocation_count > 1 %}
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill ms-1">split</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">Unallocated credit</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ payment.description|default:"-" }}</td>
+                        <td>
+                            <span class="badge {% if payment.status == 'claimed' %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} rounded-pill px-3">
+                                {{ payment.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="{% if can_delete_water_bill_payments %}12{% else %}11{% endif %}" class="text-center py-4 text-muted">No water bill payments found matching your criteria.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'templates/includes/pagination.html' %}
+    </div>
+</div>
+{% endblock %}

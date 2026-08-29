@@ -1,0 +1,110 @@
+{% extends 'templates/dashboard_base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-0">Report Generation</h2>
+        <p class="text-muted">Generate comprehensive property reports</p>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 p-4">
+        <h5 class="fw-bold mb-3">Generate Report</h5>
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="small fw-bold text-muted">Property</label>
+                <select name="property" class="form-select bg-light border-0">
+                    <option value="">All Properties</option>
+                    {% for p in properties %}
+                    <option value="{{ p.id }}" {% if selected_property|stringformat:"s" == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted">Date Range</label>
+                <input type="text" name="start_date" class="form-control datepicker" value="{{ selected_start_date|default:'' }}" placeholder="Start Date" aria-label="Start Date">
+            </div>
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted">&nbsp;</label>
+                <input type="text" name="end_date" class="form-control datepicker" value="{{ selected_end_date|default:'' }}" placeholder="End Date" aria-label="End Date">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-3"><i class="bi bi-file-earmark-text"></i> Generate</button>
+                <button type="button" class="btn btn-light border px-3"><i class="bi bi-download"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow-sm border-0 p-4">
+        <h5 class="fw-bold mb-4">Report Summary</h5>
+        
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Total Units</p>
+                <h3 class="fw-bold">{{ total_units }}</h3>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Occupied</p>
+                <h3 class="fw-bold text-success">{{ occupied }}</h3>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Vacant</p>
+                <h3 class="fw-bold text-danger">{{ vacant }}</h3>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Collection Rate</p>
+                <h3 class="fw-bold">{{ collection_rate }}%</h3>
+            </div>
+            
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Rent Expected</p>
+                <h4 class="fw-bold">KSh {{ rent_expected|floatformat:0 }}</h4>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1 text-success">Rent Collected</p>
+                <h4 class="fw-bold text-success">KSh {{ rent_collected|floatformat:0 }}</h4>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Water Bills</p>
+                <h4 class="fw-bold">KSh {{ water_total|floatformat:0 }}</h4>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Maintenance Cost</p>
+                <h4 class="fw-bold">KSh 0</h4>
+            </div>
+            <div class="col-md-3">
+                <p class="text-muted small mb-1">Total Arrears</p>
+                <h4 class="fw-bold text-danger">KSh {{ total_arrears|floatformat:0 }}</h4>
+            </div>
+        </div>
+
+        <h6 class="fw-bold mb-3">Recent Invoices</h6>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="text-muted small">
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Unit</th>
+                        <th>Tenant</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inv in recent_invoices %}
+                    <tr>
+                        <td class="small">{{ inv.invoice_number }}</td>
+                        <td>{{ inv.unit.name }}</td>
+                        <td>{{ inv.tenant.first_name }} {{ inv.tenant.last_name }}</td>
+                        <td>KSh {{ inv.amount }}</td>
+                        <td><span class="badge bg-warning-subtle text-warning rounded-pill">{{ inv.status }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center py-4 text-muted small">No recent invoices found for this period.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'templates/includes/pagination.html' %}
+    </div>
+</div>
+{% endblock %}
