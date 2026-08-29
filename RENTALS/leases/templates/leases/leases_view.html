@@ -1,0 +1,135 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Leases{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+   <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Leases</h2>
+      <div class="d-flex gap-2">
+         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLeaseModal">+ Add Lease</button>
+      </div>
+   </div>
+
+   <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body">
+         <h5 class="mb-3">Filters</h5>
+         <form method="GET" class="row g-3">
+            <div class="col-md-4">
+               <select name="property" id="leasePropertyFilter" class="form-select">
+                  <option value="">All Properties</option>
+                  {% for p in properties %}
+                  <option value="{{ p.id }}" {% if selected_property|stringformat:"s" == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                  {% endfor %}
+               </select>
+            </div>
+            <div class="col-md-4">
+               <select name="unit" id="leaseUnitFilter" class="form-select" data-units-url="/leases/units/">
+                  <option value="">All Units</option>
+                  {% for u in units %}
+                  <option value="{{ u.id }}" {% if selected_unit|stringformat:"s" == u.id|stringformat:"s" %}selected{% endif %}>{{ u.name }} ({{ u.property.name }})</option>
+                  {% endfor %}
+               </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+               <button type="submit" class="btn btn-primary w-100">FILTER</button>
+            </div>
+         </form>
+      </div>
+   </div>
+
+   <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3">
+         <h5 class="mb-0">Active Lease List</h5>
+      </div>
+      <div class="table-responsive">
+         <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+               <tr>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Property</th>
+                  <th>Unit</th>
+                  <th>Tenant</th>
+                  <th>Monthly Rent</th>
+                  <th>Deposit Held</th>
+                  <th>Status</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for lease in leases %}
+               <tr>
+                  <td>{{ lease.start_date }}</td>
+                  <td>{% if lease.end_date %}{{ lease.end_date }}{% else %}<span class="text-muted">Month-to-month</span>{% endif %}</td>
+                  <td>{{ lease.unit.property.name }}</td>
+                  <td>{{ lease.unit.name }}</td>
+                  <td>{{ lease.tenant.first_name }} {{ lease.tenant.last_name }}</td>
+                  <td>KES {{ lease.monthly_rent }}</td>
+                  <td>KES {{ lease.deposit_held }}</td>
+                  <td>{% if lease.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+               </tr>
+               {% empty %}
+               <tr><td colspan="8" class="text-center text-muted">No active leases found.</td></tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+      {% include 'templates/includes/pagination.html' %}
+   </div>
+</div>
+
+<!-- Add Lease Modal -->
+<div class="modal fade" id="addLeaseModal" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+         <div class="modal-header border-0">
+            <h5 class="modal-title fw-bold">Add New Lease</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+         </div>
+         <form id="addLeaseForm">
+            {% csrf_token %}
+            <div class="modal-body px-4">
+               <div class="mb-3">
+                  <label class="form-label fw-bold">Property</label>
+                  <select id="leasePropertySelect" name="property_id" class="form-select" required>
+                     <option value="">-- Select Property --</option>
+                     {% for p in properties %}
+                     <option value="{{ p.id }}">{{ p.name }}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+               <div class="mb-3">
+                  <label class="form-label fw-bold">Unit</label>
+                  <select id="leaseUnitSelect" name="unit_id" class="form-select" required>
+                     <option value="">-- Select Property First --</option>
+                  </select>
+               </div>
+               <div class="mb-3">
+                  <label class="form-label fw-bold">Tenant</label>
+                  <select id="leaseTenantSelect" name="tenant_id" class="form-select" required>
+                     <option value="">-- Select Unit First --</option>
+                  </select>
+               </div>
+               <div class="mb-3">
+                  <label class="form-label fw-bold">Start Date</label>
+                  <input type="date" id="leaseStartDate" name="start_date" class="form-control" value="{{ today|default:'' }}" required>
+               </div>
+               <div class="mb-3">
+                  <label class="form-label fw-bold">Deposit Held</label>
+                  <input type="number" id="leaseDepositHeld" name="deposit_held" class="form-control" value="0" step="0.01" min="0">
+               </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+               <button type="submit" class="btn btn-primary">Create Lease</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/leases.js' %}"></script>
+{% endblock %}

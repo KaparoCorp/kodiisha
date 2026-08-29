@@ -1,0 +1,251 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block extra_js %}
+<script src="{% static 'js/maintenance.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" id="maintenancePage" data-delete-url="{% url 'maintenance:delete_maintenance' %}">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Maintenance</h2>
+        <div class="d-flex gap-2">
+            <button type="button" id="deleteSelectedBtn" class="btn btn-danger" style="display: none;">
+                <i class="fas fa-trash me-1"></i> DELETE SELECTED
+            </button>
+            <button class="btn btn-outline-secondary" onclick="window.location.href='{% url 'maintenance:completed_maintenance' %}'">Completed Maintenance</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMaintenanceModal">+ Add Maintenance</button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Filters</h5>
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <select name="property" class="form-select">
+                        <option value="">All Properties</option>
+                        {% for p in properties %}
+                        <option value="{{ p.id }}" {% if selected_property|stringformat:"s" == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="pending" {% if selected_status == "pending" %}selected{% endif %}>Pending</option>
+                        <option value="completed" {% if selected_status == "completed" %}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted mb-1">Date Range</label>
+                    <input type="text" name="start_date" class="form-control datepicker" value="{{ selected_start_date }}" placeholder="Start Date" aria-label="Start Date">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted mb-1">&nbsp;</label>
+                    <input type="text" name="end_date" class="form-control datepicker" value="{{ selected_end_date }}" placeholder="End Date" aria-label="End Date">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">FILTER</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Maintenance List</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4"><input type="checkbox" id="selectAllCheckbox" class="form-check-input"></th>
+                        <th>Date</th>
+                        <th>Property</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in maintenance_list %}
+                    <tr>
+                        <td class="ps-4"><input type="checkbox" class="form-check-input maintenance-checkbox" value="{{ m.id }}"></td>
+                        <td class="date-col">{{ m.date }}</td>
+                        <td>{{ m.property }}</td>
+                        <td>{{ m.unit }}</td>
+                        <td>{{ m.description }}</td>
+                        <td>{{ m.amount }}</td>
+                        <td>
+                            <select class="form-select form-select-sm status-select" data-id="{{ m.id }}" data-status="{{ m.status }}">
+                                <option value="pending" {% if m.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="completed" {% if m.status == 'completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary attach-receipt-btn"
+                                    data-id="{{ m.id }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#receiptModal{{ m.id }}">
+                                Attach Receipt
+                            </button>
+                            <button type="button" class="btn btn-sm btn-light border editMaintenanceBtn ms-1" data-maintenance-id="{{ m.id }}" data-bs-toggle="modal" data-bs-target="#editMaintenanceModal" title="Edit Maintenance">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.706 1.706A.5.5 0 0 1 0 13.5V15h1.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l-1.707-1.707z"/></svg>
+                            </button>
+                            {% if m.receipt %}
+                            <a href="{{ m.receipt.url }}" target="_blank" class="btn btn-sm btn-outline-success ms-1">View Receipt</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted">No maintenance records found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'templates/includes/pagination.html' %}
+    </div>
+
+    <!-- Add Maintenance Modal -->
+    <div class="modal fade" id="addMaintenanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Add Maintenance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4">
+                    <div id="maintenanceMessage" class="alert d-none" role="alert"></div>
+                    <form id="addMaintenanceForm" method="post" action="{% url 'maintenance:create_maintenance' %}" data-units-url-template="{% url 'maintenance:property_units' 0 %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Property</label>
+                            <select name="property" id="maintenanceProperty" class="form-select" required>
+                                <option value="" selected disabled>Select Property</option>
+                                {% for p in properties %}
+                                <option value="{{ p.id }}">{{ p.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Unit</label>
+                            <select name="unit" id="maintenanceUnit" class="form-select" required disabled>
+                                <option value="" selected>Select Property First</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="text" name="date" class="form-control datepicker" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" name="description" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" name="amount" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">Add Maintenance</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Attach Modals -->
+    {% for m in maintenance_list %}
+    <div class="modal fade" id="receiptModal{{ m.id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Attach Receipt - {{ m.property }} {{ m.unit }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4">
+                    <div id="receiptMessage{{ m.id }}" class="alert d-none" role="alert"></div>
+                    <form class="receipt-form" data-id="{{ m.id }}" method="post" action="{% url 'maintenance:attach_receipt' m.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Receipt File</label>
+                            <input type="file" name="receipt" class="form-control" accept="image/*,.pdf" required>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">Upload Receipt</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Edit Maintenance Modal -->
+    <div class="modal fade" id="editMaintenanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Edit Maintenance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" id="editMaintenanceForm" data-units-url-template="{% url 'maintenance:property_units' 0 %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="editMaintenanceId" name="maintenance_id" value="">
+                    <div class="modal-body px-4">
+                        <div id="editMaintenanceMessage" class="alert d-none" role="alert"></div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Property</label>
+                            <select name="property" id="editMaintenanceProperty" class="form-select" required>
+                                <option value="" selected disabled>Select Property</option>
+                                {% for p in properties %}
+                                <option value="{{ p.id }}">{{ p.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Unit</label>
+                            <select name="unit" id="editMaintenanceUnit" class="form-select" required disabled>
+                                <option value="" selected>Select Property First</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Date</label>
+                            <input type="text" name="date" id="editMaintenanceDate" class="form-control datepicker" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <input type="text" name="description" id="editMaintenanceDescription" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Amount</label>
+                            <input type="number" name="amount" id="editMaintenanceAmount" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Status</label>
+                            <select name="status" id="editMaintenanceStatus" class="form-select">
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-end pb-4 px-4">
+                        <button type="button" class="btn btn-light px-4 me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

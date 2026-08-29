@@ -1,0 +1,642 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R 25 0 R 27 0 R 29 0 R 31 0 R 33 0 R] /Count 16 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1045 >>
+stream
+BT /F2 16 Tf 54 742 Td (PROPATIA Calculation Audit) Tj ET
+BT /F1 9 Tf 54 712 Td (This document lists the calculations currently performed in the application, page by page. It is) Tj ET
+BT /F1 9 Tf 54 700 Td (intended for verification only. It explains formulas using non-private sample numbers instead of) Tj ET
+BT /F1 9 Tf 54 688 Td (exporting live tenant, invoice, or payment data.) Tj ET
+BT /F1 9 Tf 54 668 Td (Generated PDF target: `RENTALS/docs/propatia_calculation_audit.pdf`) Tj ET
+BT /F2 14 Tf 54 648 Td (How To Read This Audit) Tj ET
+BT /F1 9 Tf 54 620 Td (Each item includes:) Tj ET
+BT /F1 9 Tf 54 600 Td (  - Displayed field: The number or status shown in the app.) Tj ET
+BT /F1 9 Tf 54 588 Td (  - Formula: The exact calculation logic.) Tj ET
+BT /F1 9 Tf 54 576 Td (  - Source: The code location that performs the calculation.) Tj ET
+BT /F1 9 Tf 54 564 Td (  - Explanation: A short reason for the calculation.) Tj ET
+BT /F1 9 Tf 54 552 Td (  - Example: A small hand-checkable example.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 1 of 16) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3859 >>
+stream
+BT /F2 14 Tf 54 734 Td (Dashboard Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `dashboard/templates/dashboard/dashboard.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Total Properties) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `count\(properties owned by current user\)`) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Explanation: Counts the landlord/admin user's properties.) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Example: If the user owns Green Court and Blue Court, total properties = `2`.) Tj ET
+BT /F2 10 Tf 54 606 Td (Displayed field: Total Tenants) Tj ET
+BT /F1 9 Tf 54 582 Td (  - Formula: `count\(tenants where tenant.unit.property.user == current user\)`) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Explanation: Counts tenants attached to units in the user's properties.) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Example: If Green Court has 6 tenants and Blue Court has 4 tenants, total tenants = `6 +) Tj ET
+BT /F1 9 Tf 54 534 Td (    4 = 10`.) Tj ET
+BT /F2 10 Tf 54 514 Td (Displayed field: Total Units) Tj ET
+BT /F1 9 Tf 54 490 Td (  - Formula: `sum\(Property.total_units for current user's properties\)`) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Explanation: Uses the declared total unit count stored on each property.) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Example: Green Court total units = 20, Blue Court total units = 12, total units = `20 +) Tj ET
+BT /F1 9 Tf 54 442 Td (    12 = 32`.) Tj ET
+BT /F2 10 Tf 54 422 Td (Displayed field: Recent Property Occupancy) Tj ET
+BT /F1 9 Tf 54 398 Td (  - Formula: `occupied_units = count\(property.units where status == "occupied"\)`) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Explanation: Shows occupied units for each recent property.) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Example: If a property has 12 units and 9 are marked occupied, display = `9/12 units) Tj ET
+BT /F1 9 Tf 54 350 Td (    occupied`.) Tj ET
+BT /F2 10 Tf 54 330 Td (Displayed field: Monthly Revenue) Tj ET
+BT /F1 9 Tf 54 306 Td (  - Formula: `sum\(Payment.amount where payment.user == current user and payment.date >=) Tj ET
+BT /F1 9 Tf 54 294 Td (    today - 30 days\)`) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Explanation: Adds all payments received in the last 30 days.) Tj ET
+BT /F1 9 Tf 54 258 Td (  - Example: Payments in last 30 days are KES 8,000, KES 12,000, and KES 5,000. Monthly) Tj ET
+BT /F1 9 Tf 54 246 Td (    revenue = `8,000 + 12,000 + 5,000 = 25,000`.) Tj ET
+BT /F2 10 Tf 54 226 Td (Displayed field: Previous-Month Revenue) Tj ET
+BT /F1 9 Tf 54 202 Td (  - Formula: `sum\(Payment.amount where today - 60 days <= payment.date < today - 30 days\)`) Tj ET
+BT /F1 9 Tf 54 190 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Explanation: Adds payments from the previous 30-day window for comparison.) Tj ET
+BT /F1 9 Tf 54 166 Td (  - Example: Payments in the previous window are KES 9,000 and KES 6,000. Previous-month) Tj ET
+BT /F1 9 Tf 54 154 Td (    revenue = `9,000 + 6,000 = 15,000`.) Tj ET
+BT /F2 10 Tf 54 134 Td (Displayed field: Revenue Increase Percentage) Tj ET
+BT /F1 9 Tf 54 110 Td (  - Formula: `\(\(monthly_revenue - previous_month_revenue\) / previous_month_revenue\) * 100`,) Tj ET
+BT /F1 9 Tf 54 98 Td (    rounded to 1 decimal place. If previous-month revenue is zero, the percentage is `0`.) Tj ET
+BT /F1 9 Tf 54 86 Td (  - Source: `dashboard/views.py:index`) Tj ET
+BT /F1 9 Tf 54 74 Td (  - Explanation: Measures the percentage change between the current 30-day revenue and the) Tj ET
+BT /F1 9 Tf 54 62 Td (    previous 30-day revenue.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 2 of 16) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 246 >>
+stream
+BT /F1 9 Tf 54 742 Td (  - Example: Monthly revenue = KES 25,000, previous-month revenue = KES 15,000. Increase =) Tj ET
+BT /F1 9 Tf 54 730 Td (    `\(\(25,000 - 15,000\) / 15,000\) * 100 = 66.7%`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 3 of 16) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 3734 >>
+stream
+BT /F2 14 Tf 54 734 Td (Reports Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `reports/templates/reports/report_view.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Total Units) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `count\(units after selected property/date filters are applied\)`) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Explanation: Counts units belonging to the current user, optionally narrowed by) Tj ET
+BT /F1 9 Tf 54 626 Td (    property.) Tj ET
+BT /F1 9 Tf 54 614 Td (  - Example: If the selected property has 18 units, total units = `18`.) Tj ET
+BT /F2 10 Tf 54 594 Td (Displayed field: Occupied Units) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Formula: `count\(filtered units where status == "occupied"\)`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Explanation: Counts filtered units that are currently occupied.) Tj ET
+BT /F1 9 Tf 54 534 Td (  - Example: Total filtered units = 18, occupied units = `12`.) Tj ET
+BT /F2 10 Tf 54 514 Td (Displayed field: Vacant Units) Tj ET
+BT /F1 9 Tf 54 490 Td (  - Formula: `total_units - occupied`) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Explanation: Vacant units are whatever remains after occupied units are removed from the) Tj ET
+BT /F1 9 Tf 54 454 Td (    filtered unit count.) Tj ET
+BT /F1 9 Tf 54 442 Td (  - Example: Total units = 18, occupied = 12, vacant = `18 - 12 = 6`.) Tj ET
+BT /F2 10 Tf 54 422 Td (Displayed field: Rent Expected) Tj ET
+BT /F1 9 Tf 54 398 Td (  - Formula: `sum\(Invoice.amount where Invoice.type == "Rent" after filters\)`) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Explanation: Adds rent invoices in the selected report scope.) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Example: Rent invoices are KES 12,000, KES 12,000, and KES 10,000. Rent expected =) Tj ET
+BT /F1 9 Tf 54 350 Td (    `12,000 + 12,000 + 10,000 = 34,000`.) Tj ET
+BT /F2 10 Tf 54 330 Td (Displayed field: Rent Collected) Tj ET
+BT /F1 9 Tf 54 306 Td (  - Formula: `sum\(Payment.amount after filters\)`) Tj ET
+BT /F1 9 Tf 54 294 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Explanation: Adds payment amounts in the selected report scope.) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Example: Payments are KES 8,000, KES 10,000, and KES 6,000. Rent collected = `8,000 +) Tj ET
+BT /F1 9 Tf 54 258 Td (    10,000 + 6,000 = 24,000`.) Tj ET
+BT /F2 10 Tf 54 238 Td (Displayed field: Water Total) Tj ET
+BT /F1 9 Tf 54 214 Td (  - Formula: `sum\(WaterBill.amount after filters\)`) Tj ET
+BT /F1 9 Tf 54 202 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 190 Td (  - Explanation: Adds water bill amounts in the selected report scope.) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Example: Water bills are KES 500, KES 650, and KES 450. Water total = `500 + 650 + 450 =) Tj ET
+BT /F1 9 Tf 54 166 Td (    1,600`.) Tj ET
+BT /F2 10 Tf 54 146 Td (Displayed field: Collection Rate) Tj ET
+BT /F1 9 Tf 54 122 Td (  - Formula: `\(rent_collected / rent_expected\) * 100`, rounded to 1 decimal place. If rent) Tj ET
+BT /F1 9 Tf 54 110 Td (    expected is zero, collection rate is `0`.) Tj ET
+BT /F1 9 Tf 54 98 Td (  - Source: `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 86 Td (  - Explanation: Shows how much of expected rent was collected.) Tj ET
+BT /F1 9 Tf 54 74 Td (  - Example: Rent collected = KES 80,000, rent expected = KES 100,000. Collection rate =) Tj ET
+BT /F1 9 Tf 54 62 Td (    `\(80,000 / 100,000\) * 100 = 80%`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 4 of 16) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 12 0 R >>
+endobj
+12 0 obj
+<< /Length 41 >>
+stream
+BT /F1 8 Tf 54 30 Td (Page 5 of 16) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 14 0 R >>
+endobj
+14 0 obj
+<< /Length 3447 >>
+stream
+BT /F2 14 Tf 54 734 Td (Tenant Ledger Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `tenants/templates/tenants/tenant_ledger.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Invoice Debit) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `debit = Invoice.amount`) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Explanation: Every invoice increases the tenant balance.) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Example: Invoice amount = KES 12,000, debit = `12,000`.) Tj ET
+BT /F2 10 Tf 54 606 Td (Displayed field: Payment Credit) Tj ET
+BT /F1 9 Tf 54 582 Td (  - Formula: `credit = Payment.amount`) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Explanation: Every payment reduces the tenant balance.) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Example: Payment amount = KES 5,000, credit = `5,000`.) Tj ET
+BT /F2 10 Tf 54 526 Td (Displayed field: Running Balance) Tj ET
+BT /F1 9 Tf 54 502 Td (  - Formula: `running_balance = previous_balance + debit - credit`) Tj ET
+BT /F1 9 Tf 54 490 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Explanation: Ledger entries are sorted by date. Each invoice adds to the balance and) Tj ET
+BT /F1 9 Tf 54 466 Td (    each payment subtracts from it.) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Example: Previous balance = KES 7,000, next invoice debit = KES 12,000, next payment) Tj ET
+BT /F1 9 Tf 54 442 Td (    credit = KES 5,000. Running balance = `7,000 + 12,000 - 5,000 = 14,000`.) Tj ET
+BT /F2 10 Tf 54 422 Td (Displayed field: Total Invoiced) Tj ET
+BT /F1 9 Tf 54 398 Td (  - Formula: `sum\(Invoice.amount for tenant\)`) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Explanation: Adds all invoices for that tenant.) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Example: Invoices are KES 12,000, KES 12,000, and KES 3,000. Total invoiced = `27,000`.) Tj ET
+BT /F2 10 Tf 54 342 Td (Displayed field: Total Paid) Tj ET
+BT /F1 9 Tf 54 318 Td (  - Formula: `sum\(Payment.amount for tenant\)`) Tj ET
+BT /F1 9 Tf 54 306 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 294 Td (  - Explanation: Adds all payments recorded for that tenant.) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Example: Payments are KES 10,000 and KES 8,000. Total paid = `18,000`.) Tj ET
+BT /F2 10 Tf 54 262 Td (Displayed field: Current Balance) Tj ET
+BT /F1 9 Tf 54 238 Td (  - Formula: `total_invoiced - total_paid`) Tj ET
+BT /F1 9 Tf 54 226 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 214 Td (  - Explanation: Shows the tenant's remaining balance across all invoice and payment) Tj ET
+BT /F1 9 Tf 54 202 Td (    records.) Tj ET
+BT /F1 9 Tf 54 190 Td (  - Example: Total invoiced = KES 27,000, total paid = KES 18,000. Current balance = `27,000) Tj ET
+BT /F1 9 Tf 54 178 Td (    - 18,000 = 9,000`.) Tj ET
+BT /F2 10 Tf 54 158 Td (Displayed field: Overdue Invoice Count) Tj ET
+BT /F1 9 Tf 54 134 Td (  - Formula: `count\(invoices where due_date < today and status != "Paid"\)`) Tj ET
+BT /F1 9 Tf 54 122 Td (  - Source: `tenants/views.py:tenant_ledger`) Tj ET
+BT /F1 9 Tf 54 110 Td (  - Explanation: Counts invoices that are past due and not fully paid.) Tj ET
+BT /F1 9 Tf 54 98 Td (  - Example: Four invoices exist; two are past due and unpaid. Overdue invoice count = `2`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 6 of 16) Tj ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 16 0 R >>
+endobj
+16 0 obj
+<< /Length 3896 >>
+stream
+BT /F2 14 Tf 54 734 Td (Invoices Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `invoices/templates/invoices/invoices_view.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Generated Invoice Amount) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `invoice.amount = unit.rent_amount`) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Source: `invoices/views.py:invoice_list`) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Explanation: A generated rent invoice uses the selected unit's rent amount.) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Example: Unit A1 rent amount = KES 12,000. Generated invoice amount = `12,000`.) Tj ET
+BT /F2 10 Tf 54 606 Td (Displayed field: Amount Paid) Tj ET
+BT /F1 9 Tf 54 582 Td (  - Formula: `sum\(InvoicePayment.amount_applied for invoice\)`) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Source: `invoices/models.py:Invoice.get_amount_paid`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Explanation: Adds all payment allocations attached to that invoice.) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Example: Allocations are KES 5,000 and KES 2,000. Amount paid = `5,000 + 2,000 = 7,000`.) Tj ET
+BT /F2 10 Tf 54 526 Td (Displayed field: Balance Due / Remaining Balance) Tj ET
+BT /F1 9 Tf 54 502 Td (  - Formula: `invoice.amount - invoice.get_amount_paid\(\)`) Tj ET
+BT /F1 9 Tf 54 490 Td (  - Source: `invoices/models.py:Invoice.get_remaining_balance`) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Explanation: The remaining balance is the invoice total minus allocations already) Tj ET
+BT /F1 9 Tf 54 466 Td (    applied.) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Example: Invoice amount = KES 12,000, amount paid = KES 5,000. Balance due = `12,000 -) Tj ET
+BT /F1 9 Tf 54 442 Td (    5,000 = 7,000`.) Tj ET
+BT /F2 10 Tf 54 422 Td (Displayed field: Invoice Status) Tj ET
+BT /F1 9 Tf 54 398 Td (  - Formula: `Paid if remaining <= 0; Partially Paid if remaining < invoice.amount;) Tj ET
+BT /F1 9 Tf 54 386 Td (    otherwise Unpaid`) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Source: `invoices/models.py:Invoice.update_status`) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Explanation: Status follows the remaining balance.) Tj ET
+BT /F1 9 Tf 54 350 Td (  - Example: Invoice amount = KES 12,000 and remaining = KES 0, status = `Paid`. If) Tj ET
+BT /F1 9 Tf 54 338 Td (    remaining = KES 4,000, status = `Partially Paid`.) Tj ET
+BT /F2 10 Tf 54 318 Td (Displayed field: Payment Amount Applied) Tj ET
+BT /F1 9 Tf 54 294 Td (  - Formula: `amount_applied must be > 0 and <= min\(payment.balance,) Tj ET
+BT /F1 9 Tf 54 282 Td (    invoice.remaining_balance\)`) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Source: `invoices/views.py:attach_payment_to_invoice`) Tj ET
+BT /F1 9 Tf 54 258 Td (  - Explanation: A payment cannot apply more credit than the payment has or more than the) Tj ET
+BT /F1 9 Tf 54 246 Td (    invoice still needs.) Tj ET
+BT /F1 9 Tf 54 234 Td (  - Example: Payment balance = KES 8,000 and invoice remaining balance = KES 5,000. Maximum) Tj ET
+BT /F1 9 Tf 54 222 Td (    allowed amount applied = `min\(8,000, 5,000\) = 5,000`.) Tj ET
+BT /F2 10 Tf 54 202 Td (Displayed field: Payment Balance After Attachment) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Formula: `payment.balance = payment.balance - amount_applied`) Tj ET
+BT /F1 9 Tf 54 166 Td (  - Source: `invoices/views.py:attach_payment_to_invoice`;) Tj ET
+BT /F1 9 Tf 54 154 Td (    `invoices/services.py:_apply_payment_to_invoice`) Tj ET
+BT /F1 9 Tf 54 142 Td (  - Explanation: Allocating part of a payment reduces its available credit.) Tj ET
+BT /F1 9 Tf 54 130 Td (  - Example: Payment balance = KES 8,000 and KES 5,000 is applied. New payment balance =) Tj ET
+BT /F1 9 Tf 54 118 Td (    `8,000 - 5,000 = 3,000`.) Tj ET
+BT /F2 10 Tf 54 98 Td (Displayed field: Edited Payment Allocation Difference) Tj ET
+BT /F1 9 Tf 54 74 Td (  - Formula: `difference = new_amount_applied - old_amount_applied`; then `payment.balance =) Tj ET
+BT /F1 9 Tf 54 62 Td (    payment.balance - difference`) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 7 of 16) Tj ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 18 0 R >>
+endobj
+18 0 obj
+<< /Length 2721 >>
+stream
+BT /F1 9 Tf 54 742 Td (  - Source: `invoices/views.py:update_invoice_payment`) Tj ET
+BT /F1 9 Tf 54 730 Td (  - Explanation: Increasing an allocation consumes more payment credit; decreasing it) Tj ET
+BT /F1 9 Tf 54 718 Td (    restores credit.) Tj ET
+BT /F1 9 Tf 54 706 Td (  - Example: Old allocation = KES 4,000, new allocation = KES 6,000, difference = `2,000`.) Tj ET
+BT /F1 9 Tf 54 694 Td (    Payment balance is reduced by KES 2,000.) Tj ET
+BT /F2 10 Tf 54 674 Td (Displayed field: Removed Payment Allocation) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Formula: `payment.balance = payment.balance + removed_amount_applied`) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Source: `invoices/views.py:remove_invoice_payment`) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Explanation: Removing an allocation returns that amount to the payment as available) Tj ET
+BT /F1 9 Tf 54 614 Td (    credit.) Tj ET
+BT /F1 9 Tf 54 602 Td (  - Example: Removed allocation = KES 3,000 and payment balance was KES 1,000. New balance =) Tj ET
+BT /F1 9 Tf 54 590 Td (    `1,000 + 3,000 = 4,000`.) Tj ET
+BT /F2 10 Tf 54 570 Td (Displayed field: Automatic Rent Payment Allocation) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Formula: `amount_applied = min\(payment.balance, invoice.remaining_balance\)` applied to) Tj ET
+BT /F1 9 Tf 54 534 Td (    oldest open rent invoices first.) Tj ET
+BT /F1 9 Tf 54 522 Td (  - Source: `invoices/services.py:allocate_payment_to_rent_invoices`) Tj ET
+BT /F1 9 Tf 54 510 Td (  - Explanation: A rent payment is consumed against the oldest unpaid rent invoice until) Tj ET
+BT /F1 9 Tf 54 498 Td (    either invoices are cleared or payment credit runs out.) Tj ET
+BT /F1 9 Tf 54 486 Td (  - Example: Payment balance = KES 20,000. Oldest invoice needs KES 12,000 and next invoice) Tj ET
+BT /F1 9 Tf 54 474 Td (    needs KES 12,000. First allocation = KES 12,000, remaining payment balance = KES 8,000,) Tj ET
+BT /F1 9 Tf 54 462 Td (    second allocation = KES 8,000.) Tj ET
+BT /F2 10 Tf 54 442 Td (Displayed field: Existing Credit Applied To New Rent Invoice) Tj ET
+BT /F1 9 Tf 54 418 Td (  - Formula: `amount_applied = min\(payment.balance, new_invoice.remaining_balance\)` for) Tj ET
+BT /F1 9 Tf 54 406 Td (    tenant payments with credit.) Tj ET
+BT /F1 9 Tf 54 394 Td (  - Source: `invoices/services.py:allocate_credit_to_rent_invoice`) Tj ET
+BT /F1 9 Tf 54 382 Td (  - Explanation: When a rent invoice is created, existing unallocated tenant credit can) Tj ET
+BT /F1 9 Tf 54 370 Td (    automatically reduce it.) Tj ET
+BT /F1 9 Tf 54 358 Td (  - Example: New invoice = KES 12,000 and tenant credit = KES 5,000. Applied credit =) Tj ET
+BT /F1 9 Tf 54 346 Td (    `5,000`, invoice remaining = `7,000`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 8 of 16) Tj ET
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 20 0 R >>
+endobj
+20 0 obj
+<< /Length 3823 >>
+stream
+BT /F2 14 Tf 54 734 Td (Payments Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `payments/templates/payments/payments_view.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Payment Starting Balance) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `payment.balance = payment.amount` when the payment is first created and no) Tj ET
+BT /F1 9 Tf 54 650 Td (    balance was supplied.) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Source: `payments/models.py:Payment.save`) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Explanation: A new payment starts as fully unallocated credit.) Tj ET
+BT /F1 9 Tf 54 614 Td (  - Example: Payment amount = KES 8,000. Starting balance = `8,000`.) Tj ET
+BT /F2 10 Tf 54 594 Td (Displayed field: Allocated Amount) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Formula: `sum\(InvoicePayment.amount_applied for payment\)`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Source: `payments/views.py:payment_list`) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Explanation: Adds the parts of this payment that have been attached to rent invoices.) Tj ET
+BT /F1 9 Tf 54 534 Td (  - Example: A payment is split into KES 5,000 and KES 3,000 allocations. Allocated amount =) Tj ET
+BT /F1 9 Tf 54 522 Td (    `8,000`.) Tj ET
+BT /F2 10 Tf 54 502 Td (Displayed field: Remaining Credit) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Formula: `remaining_credit = payment.balance`) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Source: `payments/views.py:payment_list`) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Explanation: Shows the unallocated part of the payment.) Tj ET
+BT /F1 9 Tf 54 442 Td (  - Example: Payment amount = KES 10,000 and allocated amount = KES 7,000. Remaining credit) Tj ET
+BT /F1 9 Tf 54 430 Td (    = `3,000`.) Tj ET
+BT /F2 10 Tf 54 410 Td (Displayed field: Payment Status) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Formula: `claimed if balance <= 0; otherwise unclaimed`) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Source: `invoices/services.py:set_payment_status_from_balance`) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Explanation: Fully allocated payments are claimed; payments with leftover credit remain) Tj ET
+BT /F1 9 Tf 54 350 Td (    unclaimed.) Tj ET
+BT /F1 9 Tf 54 338 Td (  - Example: Payment balance = KES 0, status = `claimed`. Payment balance = KES 2,000,) Tj ET
+BT /F1 9 Tf 54 326 Td (    status = `unclaimed`.) Tj ET
+BT /F2 10 Tf 54 306 Td (Displayed field: Allocation Summary) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Formula: `join\(each allocation invoice month and amount_applied\)`) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Source: `payments/views.py:payment_list`) Tj ET
+BT /F1 9 Tf 54 258 Td (  - Explanation: Shows which invoice months a payment covers.) Tj ET
+BT /F1 9 Tf 54 246 Td (  - Example: Allocations are May 2026 KES 5,000 and Jun 2026 KES 3,000. Summary = `May 2026:) Tj ET
+BT /F1 9 Tf 54 234 Td (    KES 5,000, Jun 2026: KES 3,000`.) Tj ET
+BT /F2 10 Tf 54 214 Td (Displayed field: Uploaded Payment Amount) Tj ET
+BT /F1 9 Tf 54 190 Td (  - Formula: Remove commas/currency symbols and parse the remaining number as Decimal.) Tj ET
+BT /F1 9 Tf 54 178 Td (    Parentheses are treated as negative.) Tj ET
+BT /F1 9 Tf 54 166 Td (  - Source: `payments/views.py:upload_payments`) Tj ET
+BT /F1 9 Tf 54 154 Td (  - Explanation: Allows payment imports with values like `KES 9,200.00`.) Tj ET
+BT /F1 9 Tf 54 142 Td (  - Example: Uploaded value `KES 9,200.00` becomes `9200.00`.) Tj ET
+BT /F2 10 Tf 54 122 Td (Displayed field: Payment Tenant Resolution) Tj ET
+BT /F1 9 Tf 54 98 Td (  - Formula: The selected unit must belong to the selected property and must have an active) Tj ET
+BT /F1 9 Tf 54 86 Td (    lease. The active lease tenant is assigned to the payment.) Tj ET
+BT /F1 9 Tf 54 74 Td (  - Source: `payments/views.py:resolve_active_lease_tenant`) Tj ET
+BT /F1 9 Tf 54 62 Td (  - Explanation: Prevents assigning payments to the wrong unit or tenant.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 9 of 16) Tj ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 22 0 R >>
+endobj
+22 0 obj
+<< /Length 215 >>
+stream
+BT /F1 9 Tf 54 742 Td (  - Example: Property = Green Court, unit = A1, active lease tenant = Jane Doe. Payment) Tj ET
+BT /F1 9 Tf 54 730 Td (    tenant = `Jane Doe`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 10 of 16) Tj ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 24 0 R >>
+endobj
+24 0 obj
+<< /Length 3774 >>
+stream
+BT /F2 14 Tf 54 734 Td (Arrears Report Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `arrears/templates/arrears/arrears_report.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Arrears Amount Due) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `invoice.get_remaining_balance\(\)` for overdue unpaid or partially paid) Tj ET
+BT /F1 9 Tf 54 650 Td (    invoices.) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Source: `arrears/views.py:sync_user_arrears`) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Explanation: Arrears are based on the unpaid part of an overdue invoice, not always the) Tj ET
+BT /F1 9 Tf 54 614 Td (    original invoice amount.) Tj ET
+BT /F1 9 Tf 54 602 Td (  - Example: Invoice amount = KES 12,000 and KES 5,000 was paid. Arrears amount due =) Tj ET
+BT /F1 9 Tf 54 590 Td (    `12,000 - 5,000 = 7,000`.) Tj ET
+BT /F2 10 Tf 54 570 Td (Displayed field: Days Overdue) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Formula: `\(today - invoice.due_date\).days`) Tj ET
+BT /F1 9 Tf 54 534 Td (  - Source: `arrears/views.py:sync_user_arrears`) Tj ET
+BT /F1 9 Tf 54 522 Td (  - Explanation: Counts calendar days since the invoice due date.) Tj ET
+BT /F1 9 Tf 54 510 Td (  - Example: Today is July 15 and due date was July 5. Days overdue = `10`.) Tj ET
+BT /F2 10 Tf 54 490 Td (Displayed field: Total Arrears Amount) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Formula: `sum\(Arrears.amount_due after filters\)`) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Source: `arrears/views.py:arrears_report`) Tj ET
+BT /F1 9 Tf 54 442 Td (  - Explanation: Adds all filtered arrears records.) Tj ET
+BT /F1 9 Tf 54 430 Td (  - Example: Arrears amounts are KES 7,000, KES 3,000, and KES 10,000. Total arrears =) Tj ET
+BT /F1 9 Tf 54 418 Td (    `20,000`.) Tj ET
+BT /F2 10 Tf 54 398 Td (Displayed field: Total Records) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Formula: `count\(filtered arrears records\)`) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Source: `arrears/views.py:arrears_report`) Tj ET
+BT /F1 9 Tf 54 350 Td (  - Explanation: Counts how many arrears rows match the selected filters.) Tj ET
+BT /F1 9 Tf 54 338 Td (  - Example: Five arrears rows match the selected property. Total records = `5`.) Tj ET
+BT /F2 10 Tf 54 318 Td (Displayed field: Monthly Arrears) Tj ET
+BT /F1 9 Tf 54 294 Td (  - Formula: `sum\(amount_due grouped by tenant, unit, and invoice due month\)`) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Source: `arrears/views.py:arrears_report`) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Explanation: Groups arrears by tenant/unit/month to show month-level unpaid rent.) Tj ET
+BT /F1 9 Tf 54 258 Td (  - Example: Tenant Jane has two June arrears records of KES 4,000 and KES 3,000. June) Tj ET
+BT /F1 9 Tf 54 246 Td (    monthly arrears = `4,000 + 3,000 = 7,000`.) Tj ET
+BT /F2 10 Tf 54 226 Td (Displayed field: Accumulated Arrears) Tj ET
+BT /F1 9 Tf 54 202 Td (  - Formula: `previous accumulated arrears for tenant + current monthly arrears`) Tj ET
+BT /F1 9 Tf 54 190 Td (  - Source: `arrears/views.py:arrears_report`) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Explanation: Builds a running arrears total per tenant across months.) Tj ET
+BT /F1 9 Tf 54 166 Td (  - Example: Tenant's May accumulated arrears = KES 5,000 and June monthly arrears = KES) Tj ET
+BT /F1 9 Tf 54 154 Td (    7,000. June accumulated arrears = `5,000 + 7,000 = 12,000`.) Tj ET
+BT /F2 10 Tf 54 134 Td (Displayed field: Resolved Arrears) Tj ET
+BT /F1 9 Tf 54 110 Td (  - Formula: If an arrears record is no longer linked to an active overdue invoice, mark it) Tj ET
+BT /F1 9 Tf 54 98 Td (    resolved.) Tj ET
+BT /F1 9 Tf 54 86 Td (  - Source: `arrears/views.py:sync_user_arrears`; `arrears/models.py:Arrears.mark_resolved`) Tj ET
+BT /F1 9 Tf 54 74 Td (  - Explanation: Arrears clear when the invoice is fully paid or no longer overdue/open.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 11 of 16) Tj ET
+endstream
+endobj
+25 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 26 0 R >>
+endobj
+26 0 obj
+<< /Length 201 >>
+stream
+BT /F1 9 Tf 54 742 Td (  - Example: Invoice remaining balance becomes KES 0. The arrears record is marked) Tj ET
+BT /F1 9 Tf 54 730 Td (    `resolved`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 12 of 16) Tj ET
+endstream
+endobj
+27 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 28 0 R >>
+endobj
+28 0 obj
+<< /Length 3828 >>
+stream
+BT /F2 14 Tf 54 734 Td (Water Bills Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `water_bills/templates/water_bills/water_bills_view.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Consumption) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `current_reading - previous_reading`) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Source: `water_bills/models.py:WaterBill.save`) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Explanation: Water consumption is the difference between the current and previous meter) Tj ET
+BT /F1 9 Tf 54 626 Td (    readings.) Tj ET
+BT /F1 9 Tf 54 614 Td (  - Example: Current reading = 120, previous reading = 100. Consumption = `120 - 100 = 20`.) Tj ET
+BT /F2 10 Tf 54 594 Td (Displayed field: Water Bill Amount) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Formula: `consumption * rate`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Source: `water_bills/models.py:WaterBill.save`) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Explanation: The bill amount is units consumed multiplied by the rate per unit.) Tj ET
+BT /F1 9 Tf 54 534 Td (  - Example: Consumption = 20 and rate = KES 50. Amount = `20 * 50 = 1,000`.) Tj ET
+BT /F2 10 Tf 54 514 Td (Displayed field: Water Bill Amount Paid) Tj ET
+BT /F1 9 Tf 54 490 Td (  - Formula: `sum\(WaterBillPaymentAllocation.amount_applied for water bill\)`) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Source: `water_bills/models.py:WaterBill.get_amount_paid`) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Explanation: Adds all water payment allocations attached to the bill.) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Example: Allocations are KES 400 and KES 300. Amount paid = `700`.) Tj ET
+BT /F2 10 Tf 54 434 Td (Displayed field: Water Bill Remaining Balance) Tj ET
+BT /F1 9 Tf 54 410 Td (  - Formula: `water_bill.amount - water_bill.get_amount_paid\(\)`) Tj ET
+BT /F1 9 Tf 54 398 Td (  - Source: `water_bills/models.py:WaterBill.get_remaining_balance`) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Explanation: Shows the unpaid part of the water bill.) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Example: Water bill amount = KES 1,000 and amount paid = KES 700. Remaining balance =) Tj ET
+BT /F1 9 Tf 54 362 Td (    `300`.) Tj ET
+BT /F2 10 Tf 54 342 Td (Displayed field: Water Bill Status) Tj ET
+BT /F1 9 Tf 54 318 Td (  - Formula: `Paid if remaining_balance <= 0; otherwise Unpaid`) Tj ET
+BT /F1 9 Tf 54 306 Td (  - Source: `water_bills/models.py:WaterBill.update_status`) Tj ET
+BT /F1 9 Tf 54 294 Td (  - Explanation: A water bill is paid only when all of it has been allocated.) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Example: Remaining balance = KES 0, status = `Paid`. Remaining balance = KES 300, status) Tj ET
+BT /F1 9 Tf 54 270 Td (    = `Unpaid`.) Tj ET
+BT /F2 10 Tf 54 250 Td (Displayed field: Uploaded Water Bill Consumption Validation) Tj ET
+BT /F1 9 Tf 54 226 Td (  - Formula: `uploaded consumption must equal current_reading - previous_reading`) Tj ET
+BT /F1 9 Tf 54 214 Td (  - Source: `water_bills/views.py:bulk_generate_water_bills`) Tj ET
+BT /F1 9 Tf 54 202 Td (  - Explanation: Prevents importing a row where the consumption column disagrees with the) Tj ET
+BT /F1 9 Tf 54 190 Td (    meter readings.) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Example: Previous = 100, current = 120, expected consumption = `20`. Uploaded) Tj ET
+BT /F1 9 Tf 54 166 Td (    consumption must be `20`.) Tj ET
+BT /F2 10 Tf 54 146 Td (Displayed field: Uploaded Water Bill Amount Validation) Tj ET
+BT /F1 9 Tf 54 122 Td (  - Formula: `uploaded amount must equal consumption * rate`) Tj ET
+BT /F1 9 Tf 54 110 Td (  - Source: `water_bills/views.py:bulk_generate_water_bills`) Tj ET
+BT /F1 9 Tf 54 98 Td (  - Explanation: Prevents importing a row with a wrong bill amount.) Tj ET
+BT /F1 9 Tf 54 86 Td (  - Example: Consumption = 20 and rate = KES 50, expected amount = `1,000`. Uploaded amount) Tj ET
+BT /F1 9 Tf 54 74 Td (    must be `1,000`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 13 of 16) Tj ET
+endstream
+endobj
+29 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 30 0 R >>
+endobj
+30 0 obj
+<< /Length 3576 >>
+stream
+BT /F2 14 Tf 54 734 Td (Water Bill Payments Page) Tj ET
+BT /F1 9 Tf 54 706 Td (Source page: `water_bills/templates/water_bills/water_bill_payments_view.html`) Tj ET
+BT /F2 10 Tf 54 686 Td (Displayed field: Water Payment Starting Balance) Tj ET
+BT /F1 9 Tf 54 662 Td (  - Formula: `payment.balance = payment.amount` when first created and no balance was) Tj ET
+BT /F1 9 Tf 54 650 Td (    supplied.) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Source: `water_bills/models.py:WaterBillPayment.save`) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Explanation: A new water payment starts as unallocated credit.) Tj ET
+BT /F1 9 Tf 54 614 Td (  - Example: Payment amount = KES 1,500. Starting balance = `1,500`.) Tj ET
+BT /F2 10 Tf 54 594 Td (Displayed field: Water Payment Allocation) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Formula: `amount_applied = min\(payment.balance, water_bill.remaining_balance\)` for open) Tj ET
+BT /F1 9 Tf 54 558 Td (    water bills ordered by due date.) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Source: `water_bills/views.py:allocate_payment_to_water_bills`) Tj ET
+BT /F1 9 Tf 54 534 Td (  - Explanation: Water payments are allocated to the oldest unpaid water bill first.) Tj ET
+BT /F1 9 Tf 54 522 Td (  - Example: Payment balance = KES 1,500 and oldest bill remaining = KES 1,000. Amount) Tj ET
+BT /F1 9 Tf 54 510 Td (    applied = `1,000`, payment balance becomes `500`.) Tj ET
+BT /F2 10 Tf 54 490 Td (Displayed field: Water Payment Allocated Amount) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Formula: `sum\(WaterBillPaymentAllocation.amount_applied for payment\)`) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Source: `water_bills/views.py:water_bill_payments`) Tj ET
+BT /F1 9 Tf 54 442 Td (  - Explanation: Adds all water bill allocations made from this payment.) Tj ET
+BT /F1 9 Tf 54 430 Td (  - Example: Allocations are KES 1,000 and KES 300. Allocated amount = `1,300`.) Tj ET
+BT /F2 10 Tf 54 410 Td (Displayed field: Water Payment Remaining Credit) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Formula: `remaining_credit = payment.balance`) Tj ET
+BT /F1 9 Tf 54 374 Td (  - Source: `water_bills/views.py:water_bill_payments`) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Explanation: Shows the water payment amount that has not yet been allocated.) Tj ET
+BT /F1 9 Tf 54 350 Td (  - Example: Payment amount = KES 1,500 and allocated amount = KES 1,300. Remaining credit =) Tj ET
+BT /F1 9 Tf 54 338 Td (    `200`.) Tj ET
+BT /F2 10 Tf 54 318 Td (Displayed field: Water Payment Status) Tj ET
+BT /F1 9 Tf 54 294 Td (  - Formula: `claimed if balance <= 0; otherwise unclaimed`) Tj ET
+BT /F1 9 Tf 54 282 Td (  - Source: `water_bills/views.py:set_water_payment_status_from_balance`) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Explanation: Fully used water payments are claimed; partially unused payments remain) Tj ET
+BT /F1 9 Tf 54 258 Td (    unclaimed.) Tj ET
+BT /F1 9 Tf 54 246 Td (  - Example: Balance = KES 0, status = `claimed`. Balance = KES 200, status = `unclaimed`.) Tj ET
+BT /F2 10 Tf 54 226 Td (Displayed field: Deleted Water Bill Allocation Restore) Tj ET
+BT /F1 9 Tf 54 202 Td (  - Formula: `payment.balance = payment.balance + allocation.amount_applied`) Tj ET
+BT /F1 9 Tf 54 190 Td (  - Source: `water_bills/views.py:delete_water_bills`) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Explanation: If a water bill is deleted, its allocations are returned to the water) Tj ET
+BT /F1 9 Tf 54 166 Td (    payment credit balance.) Tj ET
+BT /F1 9 Tf 54 154 Td (  - Example: Payment balance = KES 200 and deleted allocation = KES 800. New payment balance) Tj ET
+BT /F1 9 Tf 54 142 Td (    = `1,000`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 14 of 16) Tj ET
+endstream
+endobj
+31 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 32 0 R >>
+endobj
+32 0 obj
+<< /Length 3868 >>
+stream
+BT /F2 14 Tf 54 734 Td (Leases, Units, And Tenants Pages) Tj ET
+BT /F1 9 Tf 54 706 Td (Source pages: `leases/templates/leases/leases_view.html`,) Tj ET
+BT /F1 9 Tf 54 694 Td (`units/templates/units/units_view.html`, `tenants/templates/tenants/tenants_view.html`) Tj ET
+BT /F2 10 Tf 54 674 Td (Displayed field: Lease Monthly Rent) Tj ET
+BT /F1 9 Tf 54 650 Td (  - Formula: `lease.monthly_rent = lease.unit.rent_amount` when the lease is first created.) Tj ET
+BT /F1 9 Tf 54 638 Td (  - Source: `leases/models.py:Lease.save`; `units/views.py:assign_unit`) Tj ET
+BT /F1 9 Tf 54 626 Td (  - Explanation: The lease stores a rent snapshot from the unit at lease creation time.) Tj ET
+BT /F1 9 Tf 54 614 Td (  - Example: Unit rent amount = KES 12,000. New lease monthly rent = `12,000`.) Tj ET
+BT /F2 10 Tf 54 594 Td (Displayed field: Deposit Held) Tj ET
+BT /F1 9 Tf 54 570 Td (  - Formula: `deposit_held = user-entered deposit amount on lease assignment`) Tj ET
+BT /F1 9 Tf 54 558 Td (  - Source: `units/views.py:assign_unit`; `leases/models.py:Lease.deposit_held`) Tj ET
+BT /F1 9 Tf 54 546 Td (  - Explanation: Deposit held is not calculated from rent in the current code; it is stored) Tj ET
+BT /F1 9 Tf 54 534 Td (    from the submitted value.) Tj ET
+BT /F1 9 Tf 54 522 Td (  - Example: User enters deposit held = KES 12,000. Lease deposit held = `12,000`.) Tj ET
+BT /F2 10 Tf 54 502 Td (Displayed field: Tenant Deposit Amount) Tj ET
+BT /F1 9 Tf 54 478 Td (  - Formula: `deposit_amount = user-entered tenant deposit amount`) Tj ET
+BT /F1 9 Tf 54 466 Td (  - Source: `tenants/models.py:Tenant.deposit_amount`; `tenants/forms.py:TenantForm`) Tj ET
+BT /F1 9 Tf 54 454 Td (  - Explanation: Tenant deposit amount is stored directly; there is no automatic rent-based) Tj ET
+BT /F1 9 Tf 54 442 Td (    calculation in the current code.) Tj ET
+BT /F1 9 Tf 54 430 Td (  - Example: User enters KES 10,000. Tenant deposit amount = `10,000`.) Tj ET
+BT /F2 10 Tf 54 410 Td (Displayed field: Unit Occupied/Vacant Status) Tj ET
+BT /F1 9 Tf 54 386 Td (  - Formula: `occupied when an active lease exists for the unit; vacant when no other active) Tj ET
+BT /F1 9 Tf 54 374 Td (    lease remains`) Tj ET
+BT /F1 9 Tf 54 362 Td (  - Source: `leases/models.py:update_unit_status_on_active_lease`;) Tj ET
+BT /F1 9 Tf 54 350 Td (    `units/models.py:Unit.is_occupied`) Tj ET
+BT /F1 9 Tf 54 338 Td (  - Explanation: Unit occupancy follows active tenant/lease assignment.) Tj ET
+BT /F1 9 Tf 54 326 Td (  - Example: Unit A1 receives an active lease, status becomes `occupied`. If the lease) Tj ET
+BT /F1 9 Tf 54 314 Td (    becomes inactive and no other active lease exists, status becomes `vacant`.) Tj ET
+BT /F2 10 Tf 54 294 Td (Displayed field: Unit Rent Amount From Upload) Tj ET
+BT /F1 9 Tf 54 270 Td (  - Formula: Remove commas from uploaded rent amount and parse as Decimal. Some unquoted) Tj ET
+BT /F1 9 Tf 54 258 Td (    comma splits are repaired before parsing.) Tj ET
+BT /F1 9 Tf 54 246 Td (  - Source: `units/views.py:upload_units`) Tj ET
+BT /F1 9 Tf 54 234 Td (  - Explanation: Allows imports such as `15,000.00` to be stored as a numeric rent amount.) Tj ET
+BT /F1 9 Tf 54 222 Td (  - Example: Uploaded rent amount `15,000.00` becomes `15000.00`.) Tj ET
+BT /F2 10 Tf 54 202 Td (Displayed field: Occupancy Counts Used Elsewhere) Tj ET
+BT /F1 9 Tf 54 178 Td (  - Formula: `count\(Unit where status == "occupied"\)`; vacant counts are commonly) Tj ET
+BT /F1 9 Tf 54 166 Td (    `total_units - occupied`) Tj ET
+BT /F1 9 Tf 54 154 Td (  - Source: `dashboard/views.py:index`; `reports/views.py:report_generator`) Tj ET
+BT /F1 9 Tf 54 142 Td (  - Explanation: The dashboard and reports rely on unit status to compute occupancy.) Tj ET
+BT /F1 9 Tf 54 130 Td (  - Example: Total units = 20 and occupied units = 13. Vacant units = `20 - 13 = 7`.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 15 of 16) Tj ET
+endstream
+endobj
+33 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 35 0 R /F2 36 0 R >> >> /Contents 34 0 R >>
+endobj
+34 0 obj
+<< /Length 1017 >>
+stream
+BT /F2 14 Tf 54 734 Td (Important Verification Notes) Tj ET
+BT /F1 9 Tf 54 706 Td (  - Money values are stored as Decimal fields in the database for payments, invoices, units,) Tj ET
+BT /F1 9 Tf 54 694 Td (    leases, arrears, and water bills.) Tj ET
+BT /F1 9 Tf 54 682 Td (  - Display formatting such as `floatformat:2` changes how values look, not how they are) Tj ET
+BT /F1 9 Tf 54 670 Td (    calculated.) Tj ET
+BT /F1 9 Tf 54 658 Td (  - Most page filters are applied before totals are calculated, so changing property, unit,) Tj ET
+BT /F1 9 Tf 54 646 Td (    status, or date filters changes the totals.) Tj ET
+BT /F1 9 Tf 54 634 Td (  - Payment allocation is intentionally limited by two balances: available payment credit) Tj ET
+BT /F1 9 Tf 54 622 Td (    and invoice/bill remaining balance.) Tj ET
+BT /F1 9 Tf 54 610 Td (  - The PDF does not include live private data; examples are artificial and only demonstrate) Tj ET
+BT /F1 9 Tf 54 598 Td (    arithmetic.) Tj ET
+BT /F1 8 Tf 54 30 Td (Page 16 of 16) Tj ET
+endstream
+endobj
+35 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+36 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 37
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000224 00000 n 
+0000000362 00000 n 
+0000001459 00000 n 
+0000001597 00000 n 
+0000005508 00000 n 
+0000005646 00000 n 
+0000005943 00000 n 
+0000006082 00000 n 
+0000009869 00000 n 
+0000010009 00000 n 
+0000010101 00000 n 
+0000010241 00000 n 
+0000013741 00000 n 
+0000013881 00000 n 
+0000017830 00000 n 
+0000017970 00000 n 
+0000020744 00000 n 
+0000020884 00000 n 
+0000024760 00000 n 
+0000024900 00000 n 
+0000025167 00000 n 
+0000025307 00000 n 
+0000029134 00000 n 
+0000029274 00000 n 
+0000029527 00000 n 
+0000029667 00000 n 
+0000033548 00000 n 
+0000033688 00000 n 
+0000037317 00000 n 
+0000037457 00000 n 
+0000041378 00000 n 
+0000041518 00000 n 
+0000042588 00000 n 
+0000042659 00000 n 
+trailer
+<< /Size 37 /Root 1 0 R >>
+startxref
+42735
+%%EOF

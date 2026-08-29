@@ -1,0 +1,90 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock links %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle me-3" width="80" height="80" style="object-fit: cover; border: 2px solid #3f37c9;">
+                            <div>
+                                <h3 class="mb-0">{{ user.get_full_name|default:user.username }}</h3>
+                                <span class="badge rounded-pill mt-1" style="background-color: rgba(63, 55, 201, 0.1); color: #3f37c9; border: 1px solid #3f37c9;">
+                                    {{ user.profile.get_role_display }}
+                                </span>
+                                <p class="text-muted mb-0 small mt-1">{{ user.email }}</p>
+                            </div>
+                        </div>
+                        
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <h5 class="fw-bold mb-3">Edit Profile</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">{{ u_form.first_name.label }}</label>
+                                    {{ u_form.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">{{ u_form.last_name.label }}</label>
+                                    {{ u_form.last_name }}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">{{ u_form.email.label }}</label>
+                                    {{ u_form.email }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    {{ p_form.phone_number }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Current Role</label>
+                                    <input type="text" class="form-control" value="{{ user.profile.get_role_display }}" disabled>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Profile Picture</label>
+                                    {{ p_form.avatar }}
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check mt-2">
+                                        {{ p_form.notification_enabled }}
+                                        <label class="form-check-label ms-2">Enable Notifications</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-4 px-5">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Account Actions</h5>
+                        <div class="d-grid gap-2">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'accounts:change_password' %}" class="btn btn-outline-secondary">Change Password</a>
+                                <a href="{% url 'accounts:support' %}" class="btn btn-outline-secondary">Support</a>
+                                <form action="{% url 'accounts:logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                                    <button type="submit" class="btn btn-warning w-100">Logout</button>
+                                </form>
+                                <hr>
+                                <a href="{% url 'accounts:delete_account' %}" class="btn btn-danger">Delete Account</a>
+                            {% else %}
+                                <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login</a>
+                                <a href="{% url 'accounts:register' %}" class="btn btn-success">Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

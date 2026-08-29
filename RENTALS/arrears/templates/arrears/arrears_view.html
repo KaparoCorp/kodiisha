@@ -1,0 +1,86 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-0">Arrears</h2>
+        <p class="text-muted">Track outstanding payments</p>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Arrears Report</h5>
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <select name="property" class="form-select border-primary" onchange="this.form.submit()">
+                        <option value="">All Properties</option>
+                        {% for p in properties %}
+                        <option value="{{ p.id }}" {% if request.GET.property == p.id|stringformat:"i" %}selected{% endif %}>{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select name="unit" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Units</option>
+                        {% for u in units %}
+                        <option value="{{ u.id }}" {% if request.GET.unit == u.id|stringformat:"i" %}selected{% endif %}>{{ u.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select name="tenant" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Tenants</option>
+                        {% for t in tenants %}
+                        <option value="{{ t.id }}" {% if request.GET.tenant == t.id|stringformat:"i" %}selected{% endif %}>{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Tenant</th>
+                        <th>Phone</th>
+                        <th>Property</th>
+                        <th>Unit</th>
+                        <th>Invoice #</th>
+                        <th>Invoice Type</th>
+                        <th>Invoice Amount</th>
+                        <th>Total Paid</th>
+                        <th>Payment Remaining</th>
+                        <th>Balance</th>
+                        <th>Due Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in report_data %}
+                    <tr>
+                        <td class="ps-4 fw-bold">{{ item.tenant.first_name }} {{ item.tenant.last_name }}</td>
+                        <td>{{ item.tenant.phone_number }}</td>
+                        <td>{{ item.tenant.unit.property.name }}</td>
+                        <td>{{ item.tenant.unit.name }}</td>
+                        <td class="small text-muted">{{ item.invoice_no }}</td>
+                        <td>{{ item.invoice_type }}</td>
+                        <td>{{ item.invoice_amount|floatformat:2 }}</td>
+                        <td>{{ item.total_paid|floatformat:2 }}</td>
+                        <td class="fw-bold text-info">{{ item.payment_remaining|floatformat:2 }}</td>
+                        <td class="fw-bold text-danger">{{ item.balance|floatformat:2 }}</td>
+                        <td>{{ item.due_date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center py-5 text-muted">No outstanding arrears found for the selected filters.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

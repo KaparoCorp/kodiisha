@@ -1,0 +1,221 @@
+{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/payments.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Payments</h2>
+        <div class="d-flex gap-2">
+            <button type="button" id="deleteSelectedPaymentsBtn" class="btn btn-danger shadow-sm" style="display: none;">
+                <i class="bi bi-trash me-1"></i> DELETE SELECTED
+            </button>
+            <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Payments</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentModal">+ Add Payment</button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Filters</h5>
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-1">Property</label>
+                    <select name="property" class="form-select">
+                        <option value="">All Properties</option>
+                        {% for p in properties %}
+                        <option value="{{ p.id }}" {% if selected_property|stringformat:"s" == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-1">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="" {% if not selected_status %}selected{% endif %}>All Status</option>
+                        <option value="claimed" {% if selected_status == "claimed" %}selected{% endif %}>Claimed</option>
+                        <option value="unclaimed" {% if selected_status == "unclaimed" %}selected{% endif %}>Unclaimed</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted mb-1">Month</label>
+                    <select name="month" class="form-select">
+                        <option value="" {% if not selected_month %}selected{% endif %}>All Months</option>
+                        {% for m in available_months %}
+                            <option value="{{ m|date:'Y-m' }}" {% if selected_month == m|date:'Y-m' %}selected{% endif %}>{{ m|date:'F Y' }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Date Range</label>
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <input type="text" name="start_date" class="form-control datepicker" value="{{ selected_start_date }}" placeholder="Start Date" aria-label="Start Date">
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" name="end_date" class="form-control datepicker" value="{{ selected_end_date }}" placeholder="End Date" aria-label="End Date">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">FILTER</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Payment List</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">
+                            <input type="checkbox" id="selectAllPayments" class="form-check-input">
+                        </th>
+                        <th>Date</th>
+                        <th>Property</th>
+                        <th>House/Unit</th>
+                        <th>Tenant</th>
+                        <th>Code</th>
+                        <th>Amount</th>
+                        <th>Allocated</th>
+                        <th>Credit</th>
+                        <th>Covers</th>
+                        <th>Details</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td class="ps-4">
+                            <input type="checkbox" class="form-check-input payment-checkbox" value="{{ payment.id }}">
+                        </td>
+                        <td class="date-col">{{ payment.date|date:"d/m/Y" }}</td>
+                        <td>{{ payment.property.name }}</td>
+                        <td>{% if payment.unit %}{{ payment.unit.name }}{% else %}<span class="text-muted">-</span>{% endif %}</td>
+                        <td>{{ payment.tenant.first_name }} {{ payment.tenant.last_name }}</td>
+                        <td class="fw-semibold">{{ payment.code|default:"-" }}</td>
+                        <td class="fw-bold">KES {{ payment.amount }}</td>
+                        <td>KES {{ payment.allocated_amount|floatformat:2 }}</td>
+                        <td>
+                            {% if payment.remaining_credit > 0 %}
+                                <span class="badge bg-info-subtle text-info rounded-pill px-3">KES {{ payment.remaining_credit|floatformat:2 }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="small">
+                            {% if payment.allocation_summary %}
+                                {{ payment.allocation_summary }}
+                                {% if payment.allocation_count > 1 %}
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill ms-1">split</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">Unallocated credit</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ payment.description|default:"-" }}</td>
+                        <td>
+                            <span class="badge {% if payment.status == 'claimed' %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} rounded-pill px-3">
+                                {{ payment.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="12" class="text-center py-4 text-muted">No payments found matching your criteria.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'templates/includes/pagination.html' %}
+    </div>
+</div>
+
+<div class="modal fade" id="addPaymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Add New Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addPaymentForm" method="post" action="{% url 'payments:payment_list' %}">
+                {% csrf_token %}
+                <div id="paymentErrors" class="alert alert-danger mx-4 mt-3" style="display: none;"></div>
+                <div class="modal-body px-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Property</label>
+                        {{ form.property }}
+                        {% if form.property.errors %}<div class="text-danger small mt-1">{{ form.property.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">House/Unit</label>
+                        {{ form.unit }}
+                        {% if form.unit.errors %}<div class="text-danger small mt-1">{{ form.unit.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Code</label>
+                        {{ form.code }}
+                        {% if form.code.errors %}<div class="text-danger small mt-1">{{ form.code.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Amount</label>
+                        {{ form.amount }}
+                        {% if form.amount.errors %}<div class="text-danger small mt-1">{{ form.amount.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Details</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Date</label>
+                        {{ form.date }}
+                        {% if form.date.errors %}<div class="text-danger small mt-1">{{ form.date.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-end pb-4">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Add Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Upload Payments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="uploadPaymentsForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body px-4">
+                    <div id="uploadPaymentsMessages" class="alert d-none" role="alert"></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">CSV or XLSX File</label>
+                        <input type="file" id="paymentsFile" name="file" class="form-control" accept=".csv,.xlsx" required>
+                        <small class="text-muted d-block mt-2"><strong>Required Headers:</strong> PROPERTY, HOUSE_NUMBER, DATE, AMOUNT</small>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" id="cancelPaymentsUploadBtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="display:none;">Cancel</button>
+                    <button type="submit" id="validatePaymentsBtn" class="btn btn-secondary">Validate</button>
+                    <button type="button" id="uploadPaymentsBtn" class="btn btn-primary" style="display:none;">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

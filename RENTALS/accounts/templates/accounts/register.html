@@ -1,0 +1,28 @@
+{% extends 'templates/dashboard_base.html' %}
+
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock links %}
+
+{% block extra_js %}
+    <script src="{% static 'js/accounts.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="auth-center">
+    <div class="card shadow-sm border-0 p-4" style="min-width:340px;max-width:500px;width:100%;">
+                <h2 class="fw-bold mb-3 text-center">Create Account</h2>
+                <div id="formContainer">
+                    {% include 'accounts/register_form.html' %}
+                </div>
+                <div class="text-center mt-3">
+                    <small class="text-muted">Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

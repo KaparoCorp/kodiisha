@@ -1,0 +1,30 @@
+/{% extends 'templates/dashboard_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="auth-center">
+    <div class="card shadow-sm border-0 p-4" style="min-width:340px;max-width:500px;width:100%;">
+        <h2 class="fw-bold mb-3 text-center text-danger">Delete Account</h2>
+        <p class="text-muted text-center mb-4">
+            This action is <strong>permanent</strong>. All your data will be lost and cannot be recovered.
+        </p>
+
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Are you sure you want to delete your account?
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <i class="fas fa-trash me-2"></i>Yes, Delete My Account
+                </button>
+                <a href="{% url 'accounts:profile_settings' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

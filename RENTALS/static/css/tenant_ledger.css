@@ -1,0 +1,215 @@
+.ledger-card {
+    border-radius: var(--border-radius, 10px);
+    box-shadow: var(--box-shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+    margin-bottom: 20px;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-box {
+    background: linear-gradient(135deg, var(--primary-color, #3f37c9) 0%, #5a52d5 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-box.positive {
+    background: linear-gradient(135deg, var(--danger, #d63031) 0%, #e05555 100%);
+}
+
+.stat-box h3 {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.stat-box .value {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.ledger-table {
+    font-size: 14px;
+}
+
+.ledger-table th {
+    background-color: var(--bg-light, #f8f9fa);
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.ledger-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+}
+
+.ledger-table tr:hover {
+    background-color: var(--bg-light, #f8f9fa);
+}
+
+.type-invoice {
+    color: var(--danger, #dc3545);
+    font-weight: 500;
+}
+
+.type-payment {
+    color: var(--success, #28a745);
+    font-weight: 500;
+}
+
+.badge-overdue {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    display: inline-block;
+}
+
+.amount-debit {
+    color: var(--danger, #dc3545);
+    text-align: right;
+}
+
+.amount-credit {
+    color: var(--success, #28a745);
+    text-align: right;
+}
+
+.balance-positive {
+    color: var(--danger, #dc3545);
+    font-weight: 600;
+}
+
+.balance-zero {
+    color: var(--success, #28a745);
+    font-weight: 600;
+}
+
+.back-button {
+    margin-bottom: 20px;
+}
+
+.tenant-header {
+    background-color: var(--bg-light, #f8f9fa);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.tenant-switcher {
+    min-width: 260px;
+    max-width: 360px;
+    flex: 1 1 260px;
+}
+
+.tenant-switcher label {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.tenant-info h2 {
+    margin: 0;
+    color: #333;
+}
+
+.tenant-info p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+@media (max-width: 576px) {
+    .tenant-switcher {
+        max-width: none;
+        width: 100%;
+    }
+}
+
+@media print {
+    body.ledger-printing > * {
+        visibility: hidden !important;
+    }
+
+    body.ledger-printing .main-content,
+    body.ledger-printing .tenant-header,
+    body.ledger-printing .tenant-header *,
+    body.ledger-printing .ledger-card,
+    body.ledger-printing .ledger-card .card-body,
+    body.ledger-printing .ledger-card .card-body * {
+        visibility: visible !important;
+    }
+
+    body.ledger-printing .main-content {
+        position: absolute !important;
+        inset: 0 auto auto 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    body.ledger-printing .container {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    body.ledger-printing .main-content > * {
+        display: none !important;
+    }
+
+    body.ledger-printing .tenant-header,
+    body.ledger-printing .ledger-card {
+        display: block !important;
+    }
+
+    body.ledger-printing .sidebar,
+    body.ledger-printing .back-button,
+    body.ledger-printing .summary-stats,
+    body.ledger-printing .ledger-card .card-header,
+    body.ledger-printing #printLedgerButton,
+    body.ledger-printing #printLedgerButton * {
+        display: none !important;
+    }
+
+    body.ledger-printing .tenant-header,
+    body.ledger-printing .ledger-card,
+    body.ledger-printing .stat-box {
+        break-inside: avoid;
+        box-shadow: none !important;
+    }
+
+    body.ledger-printing .tenant-header,
+    body.ledger-printing .stat-box {
+        color: #000 !important;
+        background: #fff !important;
+        border: 1px solid #dee2e6 !important;
+    }
+
+    body.ledger-printing .ledger-table {
+        font-size: 11px;
+    }
+
+    body.ledger-printing .ledger-table th,
+    body.ledger-printing .ledger-table td {
+        padding: 6px 4px;
+    }
+}
